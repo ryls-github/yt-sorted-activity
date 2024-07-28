@@ -1,0 +1,9 @@
+{
+	"name": "yt-sorted-activity",
+	"version": "1.0.0",
+	"manifest_version": 3,
+	"action": {
+		"default_popup": "popup.html"
+	},
+	"permissions": ["tabs", "scripting", "activeTab"]
+}
