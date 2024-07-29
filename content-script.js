@@ -88,16 +88,17 @@ if (!document.getElementById("yt-sorted-activity")) {
 			// 過去
 			// 配信済みは動画だと含まれないので「前」だけで探す
 			if (time.includes("前")) {
-				const matched = time.match(/(\d+) (分前|時間前|日前|か月前|年前)/)
+				const matched = time.match(/(\d+) (秒前|分前|時間前|日前|か月前|年前)/)
 				if (!matched) {
 					throw new Error("不正な過去の日付があります", { cause: { time, title, item } })
 				}
 				const value = matched[1] * {
-					"分前": 1,
-					"時間前": 1000,
-					"日前": 100000,
-					"か月前": 10000000,
-					"年前": 1000000000,
+					"秒前": 1,
+					"分前": 100,
+					"時間前": 100000,
+					"日前": 10000000,
+					"か月前": 1000000000,
+					"年前": 100000000000,
 				}[matched[2]]
 				return { img, title, time, type: "old", value }
 			}
