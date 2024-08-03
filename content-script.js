@@ -6,7 +6,8 @@ if (!document.getElementById("yt-sorted-activity")) {
 			if (!document.querySelector("ytd-browse[page-subtype=subscriptions]")) {
 				throw new Error("登録チャンネルページを開いてください")
 			}
-			const items = [...document.querySelectorAll("ytd-browse[page-subtype=subscriptions] ytd-rich-grid-row ytd-rich-item-renderer")]
+			const selector = "ytd-browse[page-subtype=subscriptions] ytd-rich-grid-renderer ytd-rich-item-renderer.ytd-rich-grid-renderer"
+			const items = [...document.querySelectorAll(selector)]
 			const element = createSortedActivity(items)
 			document.body.append(element)
 		} catch (err) {
@@ -71,10 +72,11 @@ if (!document.getElementById("yt-sorted-activity")) {
 		const data = items.map(item => {
 			const img = item.querySelector("ytd-thumbnail img").cloneNode(true)
 			const title = item.querySelector("#meta h3 a").textContent
+			const channel = item.querySelector("ytd-channel-name #text").textContent
 			const time = [...item.querySelectorAll("span.inline-metadata-item")].at(-1).textContent
 
 			if (time.includes("視聴中")) {
-				return { img, title, time, type: "now" }
+				return { img, title, channel, time, type: "now" }
 			}
 			// 未来
 			if (time.includes("公開予定") || time.includes("プレミア公開")) {
@@ -83,7 +85,7 @@ if (!document.getElementById("yt-sorted-activity")) {
 					throw new Error("不正な未来の日付があります", { cause: { time, title, item } })
 				}
 				const value = +new Date(matched[1], matched[2] - 1, matched[3], matched[4], matched[5])
-				return { img, title, time, type: "future", value }
+				return { img, title, channel, time, type: "future", value }
 			}
 			// 過去
 			// 配信済みは動画だと含まれないので「前」だけで探す
@@ -100,7 +102,7 @@ if (!document.getElementById("yt-sorted-activity")) {
 					"か月前": 1000000000,
 					"年前": 100000000000,
 				}[matched[2]]
-				return { img, title, time, type: "old", value }
+				return { img, title, channel, time, type: "old", value }
 			}
 			throw new Error("不正なエントリです", { cause: { time, title, item } })
 		})
@@ -117,6 +119,7 @@ if (!document.getElementById("yt-sorted-activity")) {
 				item.img,
 				h("div", {}, [
 					h("div", {}, [item.title]),
+					h("div", {}, [item.channel]),
 					h("div", {}, [item.time]),
 				])
 			])
