@@ -73,9 +73,9 @@ if (!document.getElementById("yt-sorted-activity")) {
 			const img = item.querySelector("ytd-thumbnail img").cloneNode(true)
 			const title = item.querySelector("#meta h3 a").textContent
 			const channel = item.querySelector("ytd-channel-name #text").textContent
-			const time = [...item.querySelectorAll("span.inline-metadata-item")].at(-1).textContent
+			const time = [...item.querySelectorAll("#metadata-line span.inline-metadata-item")].at(-1)?.textContent
 
-			if (time.includes("視聴中")) {
+			if (!time || time.includes("視聴中")) {
 				return { img, title, channel, time, type: "now" }
 			}
 			// 未来
