@@ -27,7 +27,8 @@ if (!document.getElementById("yt-sorted-activity")) {
 				margin: auto;
 				width: 90%;
 				height: 90%;
-				background: white;
+				color: var(--yt-spec-text-primary);
+				background: var(--yt-spec-menu-background);
 				box-shadow: 0 0 5px 3px #0003;
 				z-index: 99999;
 				display: flex;
@@ -41,6 +42,7 @@ if (!document.getElementById("yt-sorted-activity")) {
 			}
 			.body {
 				display: flex;
+				flex-wrap: wrap;
 				gap: 20px;
 				flex: 1 0 0;
 				padding: 20px;
@@ -60,11 +62,15 @@ if (!document.getElementById("yt-sorted-activity")) {
 			.item {
 				display: flex;
 				gap: 10px;
-				overflow-wrap: break-word;
+				align-items: flex-start;
 				img {
 					width: 140px;
 					flex: none;
 					height: auto;
+				}
+				.detail {
+					min-width: 180px;
+					overflow-wrap: break-word;
 				}
 			}
 		`)
@@ -117,7 +123,7 @@ if (!document.getElementById("yt-sorted-activity")) {
 		const mkItemDOM = item => {
 			return h("div", { className: "item" }, [
 				item.img,
-				h("div", {}, [
+				h("div", { className: "detail" }, [
 					h("div", {}, [item.title]),
 					h("div", {}, [item.channel]),
 					h("div", {}, [item.time]),
