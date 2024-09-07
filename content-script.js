@@ -76,13 +76,13 @@ if (!document.getElementById("yt-sorted-activity")) {
 		`)
 		root.adoptedStyleSheets = [sheet]
 		const data = items.map(item => {
-			const img = item.querySelector("ytd-thumbnail img").cloneNode(true)
+			const vid = item.querySelector("#video-title-link").href.match(/v=(.{11})/)[1]
 			const title = item.querySelector("#meta h3 a").textContent
 			const channel = item.querySelector("ytd-channel-name #text").textContent
 			const time = [...item.querySelectorAll("#metadata-line span.inline-metadata-item")].at(-1)?.textContent
 
 			if (!time || time.includes("視聴中")) {
-				return { img, title, channel, time, type: "now" }
+				return { vid, title, channel, time, type: "now" }
 			}
 			// 未来
 			if (time.includes("公開予定") || time.includes("プレミア公開")) {
@@ -91,7 +91,7 @@ if (!document.getElementById("yt-sorted-activity")) {
 					throw new Error("不正な未来の日付があります", { cause: { time, title, item } })
 				}
 				const value = +new Date(matched[1], matched[2] - 1, matched[3], matched[4], matched[5])
-				return { img, title, channel, time, type: "future", value }
+				return { vid, title, channel, time, type: "future", value }
 			}
 			// 過去
 			// 配信済みは動画だと含まれないので「前」だけで探す
@@ -108,7 +108,7 @@ if (!document.getElementById("yt-sorted-activity")) {
 					"か月前": 1000000000,
 					"年前": 100000000000,
 				}[matched[2]]
-				return { img, title, channel, time, type: "old", value }
+				return { vid, title, channel, time, type: "old", value }
 			}
 			throw new Error("不正なエントリです", { cause: { time, title, item } })
 		})
@@ -122,7 +122,7 @@ if (!document.getElementById("yt-sorted-activity")) {
 		}
 		const mkItemDOM = item => {
 			return h("div", { className: "item" }, [
-				item.img,
+				h("img", { src: `https://i.ytimg.com/vi/${item.vid}/mqdefault.jpg` }),
 				h("div", { className: "detail" }, [
 					h("div", {}, [item.title]),
 					h("div", {}, [item.channel]),
