@@ -122,7 +122,9 @@ if (!document.getElementById("yt-sorted-activity")) {
 		}
 		const mkItemDOM = item => {
 			return h("div", { className: "item" }, [
-				h("img", { src: `https://i.ytimg.com/vi/${item.vid}/mqdefault.jpg` }),
+				h("a", { href: `/watch?v=${item.vid}`, target: "_blank" }, [
+					h("img", { src: `https://i.ytimg.com/vi/${item.vid}/mqdefault.jpg` }),
+				]),
 				h("div", { className: "detail" }, [
 					h("div", {}, [item.title]),
 					h("div", {}, [item.channel]),
