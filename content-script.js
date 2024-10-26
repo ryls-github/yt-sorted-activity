@@ -76,7 +76,7 @@ if (!document.getElementById("yt-sorted-activity")) {
 		`)
 		root.adoptedStyleSheets = [sheet]
 		const data = items.map(item => {
-			const vid = item.querySelector("#video-title-link").href.match(/v=(.{11})/)[1]
+			const vid = item.querySelector("#video-title-link").href.match(/v=([-_A-Za-z0-9]{11})/)[1]
 			const title = item.querySelector("#meta h3 a").textContent
 			const channel = item.querySelector("ytd-channel-name #text").textContent
 			const time = [...item.querySelectorAll("#metadata-line span.inline-metadata-item")].at(-1)?.textContent
