@@ -11,7 +11,7 @@ if (!document.getElementById("yt-sorted-activity")) {
 			const element = createSortedActivity(items)
 			document.body.append(element)
 		} catch (err) {
-			console.error(err)
+			console.error(err, err.cause)
 			alert(err.message)
 		}
 	}
@@ -76,10 +76,12 @@ if (!document.getElementById("yt-sorted-activity")) {
 		`)
 		root.adoptedStyleSheets = [sheet]
 		const data = items.map(item => {
-			const vid = item.querySelector("#video-title-link").href.match(/v=([-_A-Za-z0-9]{11})/)[1]
-			const title = item.querySelector("#meta h3 a").textContent
-			const channel = item.querySelector("ytd-channel-name #text").textContent
-			const time = [...item.querySelectorAll("#metadata-line span.inline-metadata-item")].at(-1)?.textContent
+			const title_anchor = item.querySelector("a.yt-lockup-metadata-view-model__title")
+			const vid = title_anchor.href.match(/v=([-_A-Za-z0-9]{11})/)[1]
+			const title = title_anchor.textContent
+			// 複合チャンネル（他3チャンネルみたいなやつ）だとチャンネルがリンクになってないので a または span
+			const channel = item.querySelector(".yt-content-metadata-view-model__metadata-row:nth-child(1) :is(a,span)").textContent
+			const time = [...item.querySelectorAll(".yt-content-metadata-view-model__metadata-row:nth-child(2) span")].at(-1).textContent
 
 			if (!time || time.includes("視聴中")) {
 				return { vid, title, channel, time, type: "now" }
