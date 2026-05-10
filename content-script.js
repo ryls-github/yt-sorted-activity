@@ -27,8 +27,8 @@ if (!document.getElementById("yt-sorted-activity")) {
 				margin: auto;
 				width: 90%;
 				height: 90%;
-				color: var(--yt-spec-text-primary);
-				background: var(--yt-spec-menu-background);
+				color: var(--yt-sys-color-baseline--text-primary);
+				background: var(--yt-sys-color-baseline--menu-background);
 				box-shadow: 0 0 5px 3px #0003;
 				z-index: 99999;
 				display: flex;
@@ -54,7 +54,7 @@ if (!document.getElementById("yt-sorted-activity")) {
 			}
 			.list {
 				flex: 1 0 0;
-				overflow: auto;
+				overflow: hidden scroll;
 				display: flex;
 				flex-flow: column;
 				gap: 10px;
@@ -76,12 +76,12 @@ if (!document.getElementById("yt-sorted-activity")) {
 		`)
 		root.adoptedStyleSheets = [sheet]
 		const data = items.map(item => {
-			const title_anchor = item.querySelector("a.yt-lockup-metadata-view-model__title")
+			const title_anchor = item.querySelector("a.ytLockupMetadataViewModelTitle")
 			const vid = title_anchor.href.match(/v=([-_A-Za-z0-9]{11})/)[1]
 			const title = title_anchor.textContent
 			// 複合チャンネル（他3チャンネルみたいなやつ）だとチャンネルがリンクになってないので a または span
-			const channel = item.querySelector(".yt-content-metadata-view-model__metadata-row:nth-child(1) :is(a,span)").textContent
-			const time = [...item.querySelectorAll(".yt-content-metadata-view-model__metadata-row:nth-child(2) span")].at(-1).textContent
+			const channel = item.querySelector(".ytContentMetadataViewModelMetadataRow>:first-child").textContent
+			const time = item.querySelector(".ytContentMetadataViewModelMetadataRow>:last-child").textContent
 
 			if (!time || time.includes("視聴中")) {
 				return { vid, title, channel, time, type: "now" }
