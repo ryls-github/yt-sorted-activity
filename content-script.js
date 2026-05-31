@@ -79,9 +79,8 @@ if (!document.getElementById("yt-sorted-activity")) {
 			const title_anchor = item.querySelector("a.ytLockupMetadataViewModelTitle")
 			const vid = title_anchor.href.match(/v=([-_A-Za-z0-9]{11})/)[1]
 			const title = title_anchor.textContent
-			// 複合チャンネル（他3チャンネルみたいなやつ）だとチャンネルがリンクになってないので a または span
-			const channel = item.querySelector(".ytContentMetadataViewModelMetadataRow>:first-child").textContent
-			const time = item.querySelector(".ytContentMetadataViewModelMetadataRow>:last-child").textContent
+			const channel = item.querySelector(".ytContentMetadataViewModelMetadataRow:first-child").textContent
+			const time = item.querySelector(".ytContentMetadataViewModelMetadataRow:last-child").textContent
 
 			if (!time || time.includes("視聴中")) {
 				return { vid, title, channel, time, type: "now" }
