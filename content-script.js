@@ -76,11 +76,28 @@ if (!document.getElementById("yt-sorted-activity")) {
 		`)
 		root.adoptedStyleSheets = [sheet]
 		const data = items.map(item => {
-			const title_anchor = item.querySelector("a.ytLockupMetadataViewModelTitle")
-			const vid = title_anchor.href.match(/v=([-_A-Za-z0-9]{11})/)[1]
-			const title = title_anchor.textContent
-			const channel = item.querySelector(".ytContentMetadataViewModelMetadataRow:first-child").textContent
-			const time = item.querySelector(".ytContentMetadataViewModelMetadataRow:last-child").textContent
+			const parseInfo = (item) => {
+				const title_anchor = item.querySelector("a.ytLockupMetadataViewModelTitle")
+				const vid = title_anchor.href.match(/v=([-_A-Za-z0-9]{11})/)[1]
+				const title = title_anchor.textContent
+				// 基本は「チャンネル名」、「視聴数」、「時間」の並び
+				// チャンネル名はマルチチャンネルだと複数あり
+				// 配信前は視聴数がない
+				// 2 つ目以降のチャンネル名は「、」から始まる
+				// 何番目かだけで判断が難しいので最初と最後を取って残りを「、」があるのだけチャンネルに追加する
+				const texts = Array.from(item.querySelectorAll(".ytContentMetadataViewModelMetadataText"), e => e.textContent)
+				let channel = texts.shift()
+				const time = texts.pop()
+				for (const text of texts) {
+					if (text.startsWith("、")) {
+						channel += text
+					} else {
+						break
+					}
+				}
+				return { vid, title, channel, time }
+			}
+			const { vid, title, channel, time } = parseInfo(item)
 
 			if (!time || time.includes("視聴中")) {
 				return { vid, title, channel, time, type: "now" }
